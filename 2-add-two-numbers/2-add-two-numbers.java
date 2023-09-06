@@ -8,38 +8,66 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        boolean more10 = false;
-        ListNode result = new ListNode(0);
-        ListNode pointer = new ListNode(0);
-        pointer = result;
-        while (l1 != null || l2 != null || more10) {
-            int tot = 0;
-            if (l1 != null) {
-                tot += l1.val;
-                l1 = l1.next;
-            }
-            if (l2 != null) {
-                tot += l2.val;
-                l2 = l2.next;
-            }
-            
-            if (more10) {
-                tot += 1;
-                more10 = false;
-            }
-            
-            if (tot >= 10) {
-                tot -= 10;
-                more10 = true;
-            }
-            
-            pointer.next = new ListNode(tot);
-            pointer = pointer.next;
-        }
-        return result.next;
+        boolean counter = false;
+        ListNode fast = new ListNode();
+        ListNode result = fast;
         
+        while (l1 != null && l2 != null) {
+            int sum = l1.val + l2.val;
+            if (counter) {
+                sum += 1;
+                counter = false;
+            }
+            
+            if (sum >= 10) {
+                counter = true;
+                sum -= 10;
+            }
+            
+            fast.next = new ListNode(sum);
+            fast = fast.next;
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        
+        while (l1 != null) {
+            int lastNum = l1.val;
+            if (counter) {
+                lastNum += 1;
+                counter = false;
+            }
+            
+            if (lastNum >= 10) {
+                counter = true;
+                lastNum -= 10;
+            }
+            fast.next = new ListNode(lastNum);
+            fast = fast.next;
+            l1 = l1.next;
+        }
+        
+        while (l2 != null) {
+            int lastNum = l2.val;
+            if (counter) {
+                lastNum += 1;
+                counter = false;
+            }
+            
+            if (lastNum >= 10) {
+                counter = true;
+                lastNum -= 10;
+            }
+            fast.next = new ListNode(lastNum);
+            fast = fast.next;
+            l2 = l2.next;
+        }
+        
+        if (counter) {
+            fast.next = new ListNode(1);
+        }
+        
+        return result.next;
     }
 }
